@@ -1,0 +1,24 @@
+{% extends "shurl/base.html" %}
+
+{% block content %} 
+
+{% load crispy_forms_tags %}         
+
+<div class="container py-5">
+
+	<h1>Django URL shortener </h1>
+    {% if user.is_authenticated %}
+    <p> Hi {{ user.username }}! </p>
+    <p>Create short url:</p>
+    <form action="{% url 'main' %}" method="post">
+      {% csrf_token %}
+      {{ form_url|crispy }}
+      <button type="submit">Create short URL</button>
+    </form>
+        <p><a href="{% url 'logout' %}">Log Out</a></p>
+    {% else %}
+    <p>Please <a href="{% url 'login' %}">login</a> to see this page. <a href="{% url 'register' %}">Register</a>  if you don't have an account</p>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "shurl/base.html" %}
+
+{% block content %} 
+
+{% load crispy_forms_tags %}         
+
+<div class="container py-5">
+	<h1>Django URL shortener </h1>
+    <p> Hi {{ user.username }}! </p>
+        <p>Your new short Url jas been generated:</p>
+        <p><a data-name="url" href="{{ new_url }}">{{ new_url }}</a></p>
+    <p>Return <a href="{% url 'index' %}">home</a>. </p>
+</div>
+
+{% endblock %}

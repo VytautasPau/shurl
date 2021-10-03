@@ -1,0 +1,18 @@
+{% extends "shurl/base.html" %}
+
+{% block content %} 
+
+{% load crispy_forms_tags %}         
+
+<!--Register--> 
+<div class="container py-5">
+    <h1>Log In</h1>
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit">Log In</button>
+    </form>
+    <p><a href="{% url 'register' %}">Register</a>  if you don't have an account</p>
+</div>
+
+{% endblock %}
