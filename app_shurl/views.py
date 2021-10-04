@@ -1,16 +1,14 @@
+import hashlib
+
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import FormView
 from django.utils.crypto import get_random_string
-# import requests
 from app_shurl.forms import UserForm, UrlForm
-from Crypto.Cipher import AES
-import base64
 
 from app_shurl.models import UrlIndex, Url
 from django_shurl.settings import LINK_STRING_LENGTH, SECRET_KEY
@@ -76,17 +74,9 @@ class MainURL(FormView):  # https://docs.djangoproject.com/en/3.2/ref/class-base
 
     @classmethod
     def encryption(cls, stringas):
-        secret = AES.new(SECRET_KEY[-32:])
-        padding = (str(stringas) + (AES.block_size - len(str(stringas)) % AES.block_size) * "\0")
-        cipher = base64.b64encode(secret.encrypt(padding))
+        full_string = stringas + SECRET_KEY[-32:]
+        cipher = hashlib.md5(full_string.encode('utf-8')).hexdigest()
         return cipher
-
-    @classmethod
-    def decryption(cls, cipher):  # never used :D
-        dec_secret = AES.new(SECRET_KEY[-32:])
-        decrypted = dec_secret.decrypt(base64.b64decode(cipher))
-        clear = decrypted.decode().rstrip("\0")
-        return clear
 
 
 def redirecting(request, shorturl):

@@ -12,10 +12,6 @@ class UrlCreationTest(TestCase):
         self.client = Client()
         self.user = User.objects.create_user('testuser', 'lennon@thebeatles.com', 'testing123')
 
-    # def tearDown(self):
-    #     # Clean up after each test
-    #     self.user.delete()
-
     def test_form(self):
         form = UrlForm({'url': "https://www.djangoproject.com/"})
         self.assertTrue(form.is_valid())
@@ -68,19 +64,19 @@ class UrlCreationTest(TestCase):
         resp = self.client.get(url)
         self.assertEqual(404, resp.status_code)
 
-    def test_benchmark_create(self):  # jei testai savo overhead papildomo neprideda.
+    def test_benchmark_create(self):  # jei testai savo overhead papildomo neprideda. Ir sqlite greitas
         self.client.login(username="testuser", password="testing123")
         start_url_amount = len(Url.objects.all())
         start_time = time()
         for i in range(10000):
             response = self.client.post(reverse("main"), data={'url': "https://www.djangoproject.com/"})
-            # ~ 39 sec
+            # ~ 39 sec su encryption. ~32 su hash
         end_time = time()
         amount2 = len(Url.objects.all())
         self.assertEqual(start_url_amount+10000, amount2)
         print("url creation benchmark. 10000 urls generated in (seconds): ", end_time - start_time)
 
-    def test_benchmark_get(self):  # jei testai savo overhead papildomo neprideda.
+    def test_benchmark_get(self):  # jei testai savo overhead papildomo neprideda. Ir sqlite greitas
         self.client.login(username="testuser", password="testing123")
         response = self.client.post(reverse("main"), data={'url': "https://www.djangoproject.com/"})
         # parse HTML data XD
@@ -93,7 +89,7 @@ class UrlCreationTest(TestCase):
         start_time = time()
         for i in range(10000):
             resp = self.client.get(url)
-            # ~30 sec.
+            # ~30 sec su encryption. ~ 22 su hash
         end_time = time()
         destination = resp.get('location')
         self.assertEqual(destination, "https://www.djangoproject.com/")

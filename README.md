@@ -1,7 +1,14 @@
+# Architektūra
+
+Keletas svarstytų pasirinkimų:
+1. hash paduotą link'ą ir nukirst iki norimo ilgio. Bet taip atsekamumas yra.
+2. linkui pridėt timestatmp ir tada hash. Bet reikės saugoti visa tai db, ir jei kas gautų priėjimą prie db viską atsekt galėtų.
+3. Dabartinis variantas - generuojam string'ą norimo ilgio; hash'inam su salt iš django secret key; saugom db į indeksuotą lentelę.
+
 # Instalation commands
 
 required linux libraries:
-``python3.9  python3.9-dev python3-pip``
+``python3.9  python3-pip``
 
 Installation:
 
